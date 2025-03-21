@@ -1,0 +1,25 @@
+name: metaml2
+channels:
+   - ckiddo74
+   - conda-forge
+
+dependencies:
+   - artisan==1.0
+   - tensorflow==2.12.1 # for some reason, pip tensorflow does not work for this version. Required for qkeras.
+   - nvidia/label/cuda-11.8.0::cuda-nvcc
+   - nvidia/label/cuda-11.8.0::cuda-toolkit
+   - pip:
+      - -e .
+      - git+https://github.com/hmarkc/hls4ml@8db496e63e03fd1c9f7c88ca262015257d739adf#egg=hls4ml
+      - numpy
+      - pydot
+      - scikit_learn
+      - image-classifiers==1.0.0b1
+      - qkeras
+      - tensorflow_probability==0.16.0
+
+
+
+
+
+

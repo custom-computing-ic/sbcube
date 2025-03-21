@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "imperial-cc-metaml"
+version = "1.0"
+authors = [
+  { name="Zhiqiang Que", email="z.que@imperial.ac.uk" },
+  { name="Gabriel Figueiredo", email="gabriel.figueiredo@imperial.ac.uk" },
+]
+description = "MetaML: a framework for encoding DNN optimisation strategies"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+
+#    "hls4ml[profiling]==0.8.1",
+
+dependencies = [
+    "tensorflow_datasets",
+    "qkeras==0.9.0",
+    "pydot",
+    "xmltodict",
+    "bayesian-optimization",
+    "pysr"
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where=["."]
+include = ["metaml", "metaml.*"]

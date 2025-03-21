@@ -1,0 +1,12 @@
+export ARTISAN_CXXFLAGS="--sysroot $CONDA_PATH/x86_64-conda-linux-gnu/sysroot \
+                         -isystem $CONDA_PATH/x86_64-conda-linux-gnu/include/c++/$GXX_COMPILER_VERSION \
+                         -isystem $CONDA_PATH/x86_64-conda-linux-gnu/include/c++/$GXX_COMPILER_VERSION/x86_64-conda-linux-gnu \
+                         -isystem $CONDA_PATH/lib/gcc/x86_64-conda-linux-gnu/$GXX_COMPILER_VERSION/include \
+                         -I $CONDA_PATH/include \
+                         -I $ARTISAN_DIR/assets/cpp/include -nostdinc++"
+export ARTISAN_LDFLAGS="-lzmq"
+export ARTISAN_CXXSTD="c++17"
+
+export PATH="$ARTISAN_DIR/assets/scripts:$PATH"
+export LD_PRELOAD="$CONDA_PATH/lib/libstdc++.so.6:$LD_PRELOAD"
+export XLA_FLAGS=--xla_gpu_cuda_data_dir=$CONDA_PATH/lib/

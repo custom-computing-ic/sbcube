@@ -1,0 +1,5 @@
+unset ARTISAN_CXXFLAGS
+unset ARTISAN_LDFLAGS
+unset ARTISAN_CXXSTD
+export PATH="${PATH//'$ARTISAN_DIR/assets/scripts:'}"
+export LD_PRELOAD="${LD_PRELOAD//'$CONDA_PATH/lib/libstdc++.so.6:'}"

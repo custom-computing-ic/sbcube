@@ -1,0 +1,51 @@
+{% set env_data = load_file_data('environment.yml') %}
+{% set name = env_data.get('name', 'default_package') | lower %}
+{% set pyproject = load_file_data('pyproject.toml') %}
+{% set version = pyproject.get('project', {}).get('version') %}
+{% set description = pyproject.get('project', {}).get('description') %}
+{% set repo_url = pyproject['project']['urls']['repository'] %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - pip
+    - toml
+{% for dep in env_data.get('dependencies', []) %}
+{% set trimmed_dep = dep | trim %}
+{% if dep is string and trimmed_dep[:7] == 'python=' %}
+    - {{ dep }}
+{% endif %}
+{% endfor %}
+
+  run:
+{% for dep in env_data.get('dependencies', []) %}
+{% if dep is string %}
+    - {{ dep }}
+{% endif %}
+{% endfor %}
+
+test:
+  imports:
+    - {{ name }}
+
+about:
+  home: "{{ repo_url }}"
+  license: Apache-2.0
+  license_family: Apache
+  license_file: LICENSE
+  summary: "{{ description }}"
+
+extra:
+  maintainers:
+    - Gabriel Figueiredo
+  recipe-maintainers:
+    - ckiddo74

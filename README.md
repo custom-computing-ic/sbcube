@@ -14,33 +14,10 @@
     ```
 3. If using CUDA, ensure the NVIDIA driver is installed and `nvidia-smi` works.
 
-## installation
-
-The installation process sets up a conda environment with all the necessary tools and runtimes required to execute the experiments available in this repository. The following packages will be installed:
-
-- Python 3.11
-- PyTorch/LibTorch 2.41
-- CUDA Toolkit 11.8
-- Artisan Metaprogramming 1.0
-
-To create the conda environment:
-```bash
-conda env create -f environment.yml
-```
-
-To activate:
-```bash
-conda activate sbcube
-```
-
-Check your cuda installation:
-```bash
-(sbcube) python3 cuda-test.py
-```
 
 ## projects
 
-* [cpp-torch/](cpp-torch/README.md): libtorch (C++) experiments using metaprogramming
+* [trustworthy_dl](projects/trustworthy_dl/README.md): HEART'25 evaluation
 
 
 
