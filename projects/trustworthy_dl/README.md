@@ -10,11 +10,6 @@ To activate:
 conda activate metaml2
 ```
 
-Check your cuda installation:
-```bash
-(metaml2) python3 cuda-test.py
-```
-
 ## Execution
 
 To search the optimal model of lenet on the mnist dataset with Bayesian OPT, run
