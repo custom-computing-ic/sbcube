@@ -1,6 +1,6 @@
-## Conda Environment
+## MetaML Conda Environment
 
-To create the conda environment:
+To create the MetaML conda environment:
 ```bash
 bash conda.env.build
 ```
