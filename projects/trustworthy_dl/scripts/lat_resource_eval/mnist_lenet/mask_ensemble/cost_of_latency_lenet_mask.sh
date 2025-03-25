@@ -1,2 +1,0 @@
-bash cost_of_latency_lenet_train_mask.sh
-bash cost_of_latency_lenet_hls_mask.sh

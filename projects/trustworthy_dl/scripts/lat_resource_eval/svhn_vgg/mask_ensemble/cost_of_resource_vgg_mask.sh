@@ -1,2 +1,0 @@
-bash cost_of_resource_vgg_mask_train.sh
-bash cost_of_resource_vgg_mask_hls.sh

@@ -1,2 +1,0 @@
-bash cost_of_latency_resnet_mc_train.sh
-bash cost_of_latency_resnet_mc_hls.sh
