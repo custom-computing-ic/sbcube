@@ -1,4 +1,24 @@
-#!/usr/bin/env python3
+"""
+Bayesian Optimization with Quantized Neural Networks for Image Classification
+
+This script trains various quantized or standard models (e.g., LeNet, ResNet, VGG) on datasets
+like MNIST, CIFAR-10, or SVHN.
+It applies model compression techniques such as pruning and dropout, and performs Bayesian
+optimization on hyperparameters such as dropout rate, pruning rate, number of Bayesian layers, and
+scaling factors.
+
+Main Features:
+
+- Dataset loading and preprocessing (MNIST, CIFAR-10, SVHN)
+- Model selection (standard and quantized versions of LeNet, ResNet, VGG)
+- Pruning and quantization support (via TensorFlow Model Optimization and QKeras)
+- Support for Bayesian/MCDropout and Masksembles for uncertainty estimation
+- Monte Carlo (MC) sampling-based predictions and expected calibration error (ECE) evaluation
+- Hyperparameter optimization via Bayesian Optimization
+- Result saving, including FLOPs, ECE, entropy, accuracy, and weighted score
+"""
+
+
 import sys
 sys.path.append(sys.path[0] + '/converter/keras')
 sys.path.append(sys.path[0] + '/models')
@@ -124,6 +144,15 @@ ckpt_path = args.save_dir + '/best_chkp.tf'
 
 
 def get_dataset(args):
+    """
+    Loads and preprocesses the dataset specified in args.
+
+    Args:
+        args: Parsed command-line arguments.
+
+    Returns:
+        dict: A dictionary containing training, test, and validation datasets.
+    """
     if args.dataset == "mnist":
         num_classes = 10
         (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -191,6 +220,15 @@ def get_dataset(args):
     return dataset
 
 def get_model(args):
+    """
+    Constructs the model architecture based on the selected model and configuration.
+
+    Args:
+        args: Parsed command-line arguments.
+
+    Returns:
+        model: A compiled Keras model.
+    """
     #model=Sequential()
     if args.model_name == "lenet":
         if args.is_quant != 0:
@@ -217,6 +255,14 @@ def get_model(args):
 
 
 def train(args, model, dataset):
+    """
+    Trains the model on the provided dataset using data augmentation, pruning, and custom learning rate schedulers.
+
+    Args:
+        args: Parsed command-line arguments.
+        model: The Keras model to train.
+        dataset: The dataset dictionary returned by get_dataset().
+    """
 
     if args.model_name == "lenet" or args.model_name == "vibnn": # vibnn is deprecated as we found its permance is very bad in HLS4ML
         chkp = ModelCheckpoint(
@@ -312,7 +358,18 @@ def train(args, model, dataset):
         raise NotImplementedError("Training not supoorted")
 
 def keras_pred(args, model, dataset):
-    #co = {"BayesianDropout": BayesianDropout, "MCDropout": MCDropout, "Masksembles": Masksembles, "MasksemblesModel": MasksemblesModel}
+    """
+    Loads the best model checkpoint and evaluates it using accuracy, entropy, and expected calibration error (ECE).
+
+    Args:
+        args: Parsed command-line arguments.
+        model: The Keras model object (may be loaded again internally).
+        dataset: The dataset dictionary.
+
+    Returns:
+        tuple: accuracy, ECE, and average predictive entropy (aPE)
+    """
+
     co = {  "BayesianDropout": BayesianDropout,
             "MCDropout": MCDropout,
             "Masksembles": Masksembles,
@@ -355,6 +412,17 @@ def keras_pred(args, model, dataset):
 
 
 def Prune_Model(args, model, x_train_len):
+    """
+    Applies structured pruning to the model layers based on pruning rate.
+
+    Args:
+        args: Parsed command-line arguments.
+        model: Original Keras model to prune.
+        x_train_len: Length of training dataset.
+
+    Returns:
+        model: Pruned Keras model.
+    """
 
     NSTEPS =   int(x_train_len)  // args.batch_size
 
@@ -386,6 +454,7 @@ def Prune_Model(args, model, x_train_len):
 discrete_options = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.80, 0.85, 0.90, 0.95]
 discrete_layer = [1,2,3]
 
+
 bayesian_output_data = {
     "num_iter": [],
     "dropout_rate": [],
@@ -398,6 +467,7 @@ bayesian_output_data = {
     "aPE": [],
     "score": []
 }
+# DataFrame to store metrics and hyperparameters from each optimization iteration
 bayesian_output_data = pd.DataFrame(bayesian_output_data)
 
 num_iter = 0
@@ -438,6 +508,19 @@ w_base = {
 
 
 def black_box_function(dropout_rate, p_rate, num_bayes_layer, scale_factor):
+    """
+    Target function for Bayesian optimization. Trains the model using the given parameters
+    and returns a weighted score based on accuracy, entropy, ECE, and FLOPs.
+
+    Args:
+        dropout_rate (float): Dropout rate (discrete index).
+        p_rate (float): Pruning rate (discrete index).
+        num_bayes_layer (int): Number of Bayesian layers.
+        scale_factor (float): Additional scaling parameter.
+
+    Returns:
+        float: Computed score to maximize during Bayesian optimization.
+    """
     def params_discrete(param):
         param = int(param)
         return discrete_options[param]
@@ -540,6 +623,7 @@ params_nn ={
     'scale_factor'    : (0, len(discrete_options)-0.001) ,
 }
 
+# Run Bayesian optimization to tune hyperparameters
 optimizer = BOptimize(
     f=black_box_function,
     pbounds=params_nn,
@@ -550,6 +634,7 @@ optimizer = BOptimize(
 optimizer.maximize(init_points=1, n_iter=args.bayes_num_iter)
 
 save_csv_loc = args.save_dir + "/bayesian_opt" + "_" + start_time + ".csv"
+# Save final optimization results to CSV
 bayesian_output_data.to_csv(save_csv_loc, index=False)
 print("\n")
 print(bayesian_output_data)
