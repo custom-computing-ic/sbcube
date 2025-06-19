@@ -1,0 +1,16 @@
+name: nautic_test
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - pip:
+      - pydantic
+      - bayesian-optimization
+      - pyyaml
+      - pandas
+      - packaging
+
+
+
+

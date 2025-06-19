@@ -1,0 +1,58 @@
+seed: 42
+
+# tunable parameters
+params:
+  p1: <float>
+  p1_space: <list>
+  p2: <float>
+  p2_space: <list>
+
+# design metrics
+eval:
+  w: <float>
+  x: <float>
+  y: <float>
+  z: <float>
+
+bayes_opt:
+  iteration: <int>
+  terminate: <bool>
+  engine: <obj>
+  score: <float>
+  summary: <list>
+  control:
+    params: dict
+    metrics: dict
+    suggests: dict
+
+  num_iter: 20
+  seed: ((seed))
+  tunable:
+    p1:
+       value: ((params.p1))
+       space: ((params.p1_space))
+    p2:
+       value: ((params.p2))
+       space: ((params.p2_space))
+
+  metrics:
+    w: ((eval.w))
+    x: ((eval.x))
+    y: ((eval.y))
+    z: ((eval.z))
+
+  score_weights:
+    w:
+      weight: 0.25
+      base: 1
+    x:
+      weight: 0.25
+      base: 1
+    y:
+      weight: 0.25
+      base: 1
+    z:
+      weight: 0.25
+      base: 1
+
+
