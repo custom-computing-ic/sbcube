@@ -20,6 +20,18 @@
 * [trustworthy_dl](projects/trustworthy_dl/README.md): HEART'25 evaluation
 
 
+## Citation
+If you find the trustworthy_dlproject useful, please cite our paper:
+
+```{=latex}
+@inproceedings{que2025trustworthy,
+  title={Trustworthy Deep Learning Acceleration with Customizable Design Flow Automation},
+  author={Que, Zhiqiang and Fan, Hongxiang and Figueiredo, Gabriel and Guo, Ce and Luk, Wayne and Yasudo, Ryota and Motomura, Masato},
+  booktitle={Proceedings of the 15th International Symposium on Highly Efficient Accelerators and Reconfigurable Technologies},
+  pages={1--13},
+  year={2025}
+}
+```
 
 
 
