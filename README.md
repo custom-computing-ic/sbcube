@@ -21,7 +21,7 @@
 
 
 ## Citation
-If you find the trustworthy_dlproject useful, please cite our paper:
+If you find the trustworthy_dl project useful, please cite our paper:
 
 ```{=latex}
 @inproceedings{que2025trustworthy,
