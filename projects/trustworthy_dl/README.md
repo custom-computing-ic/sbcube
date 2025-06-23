@@ -1,4 +1,4 @@
-## Bayesian Optimization with Quantized Neural Networks for Image Classification
+## Bayesian Optimization with Bayesian Neural Networks for Image Classification
 
 This script trains various quantized or standard models (e.g., LeNet, ResNet, VGG) on datasets like MNIST, CIFAR-10, or SVHN.
 It applies model compression techniques such as pruning and dropout, and performs Bayesian optimization on hyperparameters
