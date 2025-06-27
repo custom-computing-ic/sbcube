@@ -15,9 +15,9 @@ engine = ctx.engine
 
 # setup experiment (check bayes.yml for details)
 
-ctx.params.pruned_space = (-10, 10)
-ctx.params.locked_space = (-10, 10)
-ctx.params.nfrozen_space = (-10, 10)
+ctx.params.pruned_space = (-5, 5)
+ctx.params.locked_space = (-5, 5)
+ctx.params.nfrozen_space = (-5, 5)
 
 ctx.seed = 42
 ctx.bayes_opt.num_iter = 10
@@ -36,6 +36,7 @@ while True:
     locked = ctx.params.locked
     nfrozen = ctx.params.nfrozen
 
+    # apply softmax to convert to probabilities
     exp_vals = np.exp([pruned, locked, nfrozen])
     softmax_vals = exp_vals / np.sum(exp_vals)
 
