@@ -1,4 +1,4 @@
-## Bayesian Optimization with Quantized Neural Networks for Image Classification
+## Bayesian Optimization with Bayesian Neural Networks for Image Classification
 
 This script trains various quantized or standard models (e.g., LeNet, ResNet, VGG) on datasets like MNIST, CIFAR-10, or SVHN.
 It applies model compression techniques such as pruning and dropout, and performs Bayesian optimization on hyperparameters
@@ -67,3 +67,15 @@ final_score = float(accuracy / acc_base[args.model_name]) * 0.7 \
 ```
 Make sure the weights (`w_list`) passed as arguments align with any changes in this logic.
 
+## Citation
+If you find the trustworthy_dl project useful, please cite our paper:
+
+```{=latex}
+@inproceedings{que2025trustworthy,
+  title={Trustworthy Deep Learning Acceleration with Customizable Design Flow Automation},
+  author={Que, Zhiqiang and Fan, Hongxiang and Figueiredo, Gabriel and Guo, Ce and Luk, Wayne and Yasudo, Ryota and Motomura, Masato},
+  booktitle={Proceedings of the 15th International Symposium on Highly Efficient Accelerators and Reconfigurable Technologies},
+  pages={1--13},
+  year={2025}
+}
+```
