@@ -16,18 +16,25 @@ class BayesOpt:
             pbounds = { }
             tune_vals = { }
             tune_space = { }
+            tune_type = { }
             bo.control.params = { }
             for key in bo.tunable.model_fields:
                 opt = getattr(bo.tunable, key)
                 if isinstance(opt.space.get(), list):
                     pbounds[key] = (0, len(opt.space.get()) - 0.001)
+                    tune_type[key] = 'categorical'
+                elif isinstance(opt.space.get(), tuple) and len(opt.space.get()) == 2:
+                    pbounds[key] = opt.space.get()
+                    tune_type[key] = 'continuous'
                 else:
                     raise ValueError(f"Unsupported space type for {key}: {type(opt.space.get())}")
 
                 tune_vals[key] = opt.value
                 tune_space[key] = opt.space
+
             bo.control.params['values'] = tune_vals
             bo.control.params['space'] = tune_space
+            bo.control.params['type'] = tune_type
 
             bo.control.metrics = {}
             metrics_values = {}
@@ -75,7 +82,11 @@ class BayesOpt:
         # set the parameters for other tasks
         for key, value in bo.control.suggests.items():
             idx = int(value)
-            metric_val = bo.control.params['space'][key].get()[idx]
+            param_type = bo.control.params['type'][key]
+            if param_type == 'categorical':
+                metric_val = bo.control.params['space'][key].get()[idx]
+            else: # continuous
+                metric_val = value
             summary[key] = metric_val
             bo.control.params['values'][key].set(metric_val)
 

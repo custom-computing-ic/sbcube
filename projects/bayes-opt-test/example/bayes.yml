@@ -2,10 +2,12 @@ seed: 42
 
 # tunable parameters
 params:
-  p1: <float>
-  p1_space: <list>
-  p2: <float>
-  p2_space: <list>
+  pruned: <float>
+  pruned_space: <list>
+  locked: <float>
+  locked_space: <list>
+  nfrozen: <float>
+  nfrozen_space: <float>
 
 # design metrics
 eval:
@@ -28,12 +30,15 @@ bayes_opt:
   num_iter: 20
   seed: ((seed))
   tunable:
-    p1:
-       value: ((params.p1))
-       space: ((params.p1_space))
-    p2:
-       value: ((params.p2))
-       space: ((params.p2_space))
+    pruned:
+       value: ((params.pruned))
+       space: ((params.pruned_space))
+    locked:
+       value: ((params.locked))
+       space: ((params.locked_space))
+    nfrozen:
+       value: ((params.nfrozen))
+       space: ((params.nfrozen_space))
 
   metrics:
     w: ((eval.w))

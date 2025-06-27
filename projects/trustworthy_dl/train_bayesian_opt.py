@@ -249,8 +249,8 @@ def get_model(args):
             model = VGG11(args, filters=16, dense_out=[16, 16, 10])
     else:
         raise NotImplementedError("Model not supoorted")
-    #model.compile(optimizer=SGD(lr = args.lr), loss=['categorical_crossentropy'], metrics=['accuracy'])
-    print(model.summary())
+
+    #print(model.summary())
     return model
 
 
@@ -283,14 +283,15 @@ def train(args, model, dataset):
             callbacks = [chkp]
             #callbacks = []
 
+        print("p_rate:", args.p_rate)
+        print("batch_size:", args.batch_size)
+        print("num_epoch:", args.num_epoch)
+        print("validation_split:", args.validation_split)
+
         train_stat = model.fit(
             dataset['x_train'], dataset['y_train'], batch_size=args.batch_size,
             epochs=args.num_epoch, initial_epoch=1,
             validation_split=args.validation_split, callbacks=callbacks)
-#        train_stat = model.fit(
-#            dataset['x_train'], dataset['y_train'], batch_size=args.batch_size,
-#            epochs=args.num_epoch, initial_epoch=1,
-#            validation_split=args.validation_split)
 
     elif args.model_name == "resnet":
         datagen = ImageDataGenerator(
@@ -307,17 +308,7 @@ def train(args, model, dataset):
         )
         print('train with data augmentation')
         train_gen = datagen.flow(dataset['x_train'], dataset['y_train'], batch_size=args.batch_size)
-        # def lr_scheduler(epoch):
-        #     lr = args.lr
-        #     new_lr = lr
-        #     if epoch <= 91:
-        #         pass
-        #     elif epoch > 91 and epoch <= 137:
-        #         new_lr = lr * 0.1
-        #     else:
-        #         new_lr = lr * 0.01
-        #     print('new lr:%.2e' % new_lr)
-        #     return new_lr
+
         def lr_scheduler(epoch):
             lr = args.lr
             new_lr = lr * (0.1 ** (epoch // 50))
@@ -345,6 +336,7 @@ def train(args, model, dataset):
                                            callbacks=callbacks,
                                            validation_data=(dataset['x_val'], dataset['y_val']),
                                            )
+
 
     elif args.model_name == "vgg":
         callbacks = [CosineAnnealingScheduler(T_max=args.num_epoch, eta_max=args.lr, eta_min=1e-4)]
@@ -384,7 +376,7 @@ def keras_pred(args, model, dataset):
     model = load_model(ckpt_path, custom_objects=co)
     #model = Top_Level_Model(args, model)
 
-    model.model.summary()
+    #model.model.summary()
     check_sparsity(model.model)
     print("dropout_rate", args.dropout_rate)
     #model.model  = strip_pruning(model.model)
@@ -443,7 +435,7 @@ def Prune_Model(args, model, x_train_len):
     #print_qmodel_summary(model)
     model = tf.keras.models.clone_model(model, clone_function=pruneFunction)
 
-    model.compile(optimizer=SGD(lr = args.lr), loss=['categorical_crossentropy'], metrics=['accuracy'])
+    model.compile(optimizer=SGD(learning_rate = args.lr), loss=['categorical_crossentropy'], metrics=['accuracy'])
     return model
 
     #pr = pruning_callbacks.UpdatePruningStep()
@@ -559,7 +551,7 @@ def black_box_function(dropout_rate, p_rate, num_bayes_layer, scale_factor):
 
     train(args, model, dataset)
 
-    model.model.summary()
+    #model.model.summary()
     #scores = model.evaluate(dataset["x_test"], dataset["y_test"], verbose=0)
     #print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
 
@@ -605,7 +597,7 @@ def black_box_function(dropout_rate, p_rate, num_bayes_layer, scale_factor):
         ece,
         ape,
         final_score]
-
+    print("bayesian_output_data:\n", bayesian_output_data)
 
     save_csv_loc = args.save_dir + "/bayesian_opt_" + f"iter{num_iter}.csv"
     bayesian_output_data.to_csv(save_csv_loc, index=False)
