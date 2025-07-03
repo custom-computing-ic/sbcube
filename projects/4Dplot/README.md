@@ -1,13 +1,13 @@
-# 3D Pareto Front Plot
+# 4D Pareto Front Plot
 
 ![Pareto Front Plot](data/lenet5-balance.png)
 
 
 ```
-python plot.py bayes_opt.csv --top 5
+python plot.py bayes_opt.csv --top 2
 ```
 
-- reads CSV, considers the last 5 pareto points at each dimension
+- reads CSV, considers the last 2 pareto points at each dimension
 - to parameterise, edit plot.py in the parameterization section
 
 
